@@ -1,24 +1,23 @@
 import express from "express";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
-
+import path from "path";
 import productRoutes from "./routes/product.route.js";
 
 dotenv.config();
 const app = express();
 
-// Middleware
+const __dirname = path.resolve();
 app.use(express.json()); // Parse JSON request bodies if needed
-
-// Define a route for the root URL "/"
-app.get("/", (req, res) => {
-  res.send("Balls");
-});
-
 app.use("/api/products", productRoutes);
-
-// Start the server and connect to the database
 const PORT = process.env.PORT || 5000;
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "/frontend/dist")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+  })
+}
 
 const startServer = async () => {
   try {
