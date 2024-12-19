@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FaRegPlusSquare } from "react-icons/fa";
 import { IoMoon } from "react-icons/io5";
 import { IoSunnyOutline } from "react-icons/io5";
+import { FaDatabase } from "react-icons/fa6";
 
 function Navbar() {
     const {colormode, toggleColorMode} = useColorMode();
@@ -25,13 +26,18 @@ function Navbar() {
           bgGradient={"linear(to-r, cyan.400, blue.500, purple.600)"}
           bgClip={"text"}
         >
-          <Link to={"/"}>Product Store 🛒</Link>
+          <Link to={"/"}>Edging</Link>
         </Text>
 
         <HStack spacing={"2"} alignItems={"center"}>
         <Link to={"/create"}>
             <Button>
                 <FaRegPlusSquare fontSize={"20"}/>
+            </Button>
+        </Link>
+        <Link to={"/display"}>
+            <Button>
+                <FaDatabase fontSize={"20"}/>
             </Button>
         </Link>
         <Link>
