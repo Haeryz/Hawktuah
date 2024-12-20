@@ -35,7 +35,7 @@ function Navbar() {
                 <FaRegPlusSquare fontSize={"20"}/>
             </Button>
         </Link>
-        <Link to={"/display"}>
+        <Link to={"/motion"}>
             <Button>
                 <FaDatabase fontSize={"20"}/>
             </Button>

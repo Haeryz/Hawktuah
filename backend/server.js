@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
 import path from "path";
 import productRoutes from "./routes/product.route.js";
+import motionRoutes from "./routes/motion.route.js";
 
 dotenv.config();
 const app = express();
@@ -10,6 +11,7 @@ const app = express();
 const __dirname = path.resolve();
 app.use(express.json()); // Parse JSON request bodies if needed
 app.use("/api/products", productRoutes);
+app.use("/api/motions", motionRoutes);
 const PORT = process.env.PORT || 5000;
 
 if (process.env.NODE_ENV === "production") {
