@@ -19,12 +19,6 @@ export const getMotion = async (req, res) => {
 };
 
 export const createMotion = async (req, res) => {
-  const { pir, sound, buzzer, led, keterangan } = req.body;
-
-  if (!pir || !sound || !buzzer || !led || !keterangan) {
-    return res.status(400).json({ success: false, message: "Incomplete data" });
-  }
-
   try {
     const newMotion = new Motion(req.body);
     await newMotion.save();
