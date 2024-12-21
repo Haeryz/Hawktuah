@@ -1,15 +1,28 @@
-import { useEffect, useRef } from "react";
-import { useMotionStore } from "./../store/motion"; // Assuming Zustand store is in 'store.js'
-import { Box, Spinner } from "@chakra-ui/react";
+import { useEffect, useRef, useState } from "react";
+import { Box, Spinner, Switch, FormLabel, FormControl } from "@chakra-ui/react";
+import { useMotionStore } from "../store/motion"; // Assuming Zustand store is in 'store.js'
+import { useSystemStateStore } from "../store/systemState"; // Assuming Zustand store for system state
 
 function MotionComponents() {
   const { motions, fetchMotions } = useMotionStore();
+  const { systemState, createSystemState, setSystemState } =
+    useSystemStateStore();
+  const [isSystemOn, setIsSystemOn] = useState(systemState ?? false); // Local state for the Switch
   const canvasRef = useRef(null); // To access the canvas element
   const padding = 50; // Padding for the chart
   const numYTicks = 5; // Number of ticks for the Y-axis
 
+  // Fetch motions data and set up polling for new data
   useEffect(() => {
     fetchMotions(); // Fetch motions data when the component mounts
+
+    // Set up polling to fetch new data every 3 seconds
+    const interval = setInterval(() => {
+      fetchMotions();
+    }, 3000);
+
+    // Clean up the interval when the component is unmounted
+    return () => clearInterval(interval);
   }, [fetchMotions]);
 
   // Function to draw the chart manually
@@ -90,8 +103,27 @@ function MotionComponents() {
     drawChart();
   }, [motions]);
 
+  // Handle switch toggle
+  const handleToggle = async () => {
+    setIsSystemOn(!isSystemOn); // Update local state
+    await createSystemState(); // Call the action to toggle system state in backend
+    setSystemState(!isSystemOn); // Update Zustand store with the new state
+  };
+
   return (
     <Box padding={5}>
+      <FormControl display="flex" alignItems="center" marginBottom={4}>
+        <FormLabel htmlFor="systemState" mb="0">
+          IoT System State
+        </FormLabel>
+        <Switch
+          id="systemState"
+          isChecked={isSystemOn}
+          onChange={handleToggle}
+          colorScheme="teal"
+        />
+      </FormControl>
+
       {motions.length === 0 ? (
         <Spinner size="xl" /> // Show loading spinner if no motions data
       ) : (
