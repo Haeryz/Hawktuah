@@ -26,4 +26,22 @@ export const useSystemStateStore = create((set) => ({
       console.error("Error:", error);
     }
   },
+
+  fetchSystemState: async () => { // Add this function
+    try {
+      // Make a GET request to fetch the system state
+      const res = await fetch("/api/system-state");
+
+      const data = await res.json();
+
+      if (data.success) {
+        // If successful, update the store with the fetched system state
+        set({ systemState: data.systemState });
+      } else {
+        console.error("Failed to fetch system state:", data.message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  },
 }));

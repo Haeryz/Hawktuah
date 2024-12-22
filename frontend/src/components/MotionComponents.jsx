@@ -12,13 +12,13 @@ import { useMotionStore } from "../store/motion";
 import { useSystemStateStore } from "../store/systemState";
 
 function MotionComponents() {
-  const { motions} = useMotionStore();
-  const { systemState, createSystemState, setSystemState } = useSystemStateStore();
+  const { motions } = useMotionStore();
+  const { systemState, createSystemState, fetchSystemState } =
+    useSystemStateStore();
   const [isSystemOn, setIsSystemOn] = useState(systemState ?? false);
   const canvasRef = useRef(null);
   const padding = 50;
   const numYTicks = 5;
-
 
   // Function to draw the chart
   const drawChart = () => {
@@ -162,16 +162,43 @@ function MotionComponents() {
     drawChart();
   }, [motions]);
 
-  // Switch toggle handler
+  useEffect(() => {
+    const initializeSystemState = async () => {
+      try {
+        await fetchSystemState();
+        // After fetching, update isSystemOn based on the systemState
+        const { systemState } = useSystemStateStore.getState();
+        setIsSystemOn(systemState !== null ? systemState : false);
+      } catch (error) {
+        console.error("Failed to initialize system state:", error);
+        // Optionally, set a default state here if the fetch fails
+        setIsSystemOn(false);
+      }
+    };
+    initializeSystemState();
+  }, []); // Empty dependency array means this effect runs once on mount
+
   const handleToggle = async () => {
-    setIsSystemOn(!isSystemOn);
-    await createSystemState();
-    setSystemState(!isSystemOn);
+    const newSystemState = !isSystemOn;
+    setIsSystemOn(newSystemState); // Update UI immediately
+
+    try {
+      // Use POST for both turning ON and OFF to ensure server state is updated
+      await createSystemState();
+      // After the POST request, fetch the updated state from the server
+      await fetchSystemState();
+      // Update the UI with the server's response which is now definitely the latest state
+      const { systemState } = useSystemStateStore.getState();
+      setIsSystemOn(systemState);
+    } catch (error) {
+      console.error("API call failed:", error);
+      // If the API call fails, revert the switch state
+      setIsSystemOn(!newSystemState);
+    }
   };
 
   return (
     <Box padding={5}>
-
       {motions.length === 0 ? (
         <Spinner size="xl" /> // Show loading spinner if no motions data
       ) : (
