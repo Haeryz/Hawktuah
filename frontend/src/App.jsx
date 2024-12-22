@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 
 //routes
 import CreatePage from "./pages/CreatePage"; // Ensure the file name matches exactly
-import Navbar from "./components/navbar";
+import Navbar from "./components/Navbar";
 import HomPage from "./pages/HomPage";
 import SensorDisplay from "./pages/SensorDisplay";
 import Motion from './pages/Motion';
