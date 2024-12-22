@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Container } from "@chakra-ui/react";
+import { Container, Flex, Box } from "@chakra-ui/react";
 import { useMotionStore } from "../store/motion"; // Adjust the path accordingly
 import MotionComponents from "../components/MotionComponents";
 import ValueCard from "../components/ValueCard";
@@ -16,10 +16,18 @@ function Motion() {
   }, [fetchMotions]);
 
   return (
-    <Container>
-      <MotionComponents />
-      <ValueCard />
-      <KeteranganCard />
+    <Container maxW="container.xl" p={4}>
+      <Flex direction={{ base: 'column', md: 'row' }} wrap="wrap" justify="space-between" gap={4}>
+        <Box flex="1" minWidth="300px">
+          <MotionComponents />
+        </Box>
+        <Box flex="1" minWidth="300px">
+          <ValueCard />
+        </Box>
+        <Box flex="1" minWidth="300px">
+          <KeteranganCard />
+        </Box>
+      </Flex>
     </Container>
   );
 }
