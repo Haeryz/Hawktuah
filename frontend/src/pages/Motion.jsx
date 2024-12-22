@@ -3,6 +3,7 @@ import { Container } from "@chakra-ui/react";
 import { useMotionStore } from "../store/motion"; // Adjust the path accordingly
 import MotionComponents from "../components/MotionComponents";
 import ValueCard from "../components/ValueCard";
+import KeteranganCard from '../components/KeteranganCard';
 
 function Motion() {
   const { fetchMotions } = useMotionStore();
@@ -18,6 +19,7 @@ function Motion() {
     <Container>
       <MotionComponents />
       <ValueCard />
+      <KeteranganCard />
     </Container>
   );
 }
